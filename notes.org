@@ -1,0 +1,16 @@
+#+TITLE: Definite Integration Approximator
+#+AUTHOR: Gage Golish
+
+* Program Notes
+
+** Integration Approximation Algorithm
+
+   - The current plan is to use Simpson's rule to approximate the integrals.
+   - Watch patrickJMT's video on the derivation of Simpson's rule, as
+     well as his video on error bounds when using Simpson's rule.
+
+** Formula Parsing Algorithm
+   
+   - Investigate the shunting yard algorithm.
+   - Investigate whether converting to postfix notation or abstract
+     syntax tree is more efficient for calculations.
