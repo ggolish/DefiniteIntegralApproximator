@@ -1,3 +1,4 @@
+#include "simpson.h"
 #include "parser.h"
 #include "ast.h"
 
@@ -6,6 +7,11 @@
 
 int main(int argc, char *argv[])
 {
+  long double a, b;
+
+  scanf("%Lf\n", &a);
+  scanf("%Lf\n", &b);
+
   char *equ = NULL;
   size_t n = 0;
 
@@ -16,7 +22,7 @@ int main(int argc, char *argv[])
   }
   
   ast_t *ast = parse_equ(equ);
-  printf("%Lf\n", evaluate_ast(ast, 2));
+  printf("%.3Lf\n", integrate_simpson(ast, a, b, 4));
 
   return EXIT_SUCCESS;
 }
