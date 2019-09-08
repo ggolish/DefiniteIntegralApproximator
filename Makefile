@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -g
-OBJS = scanner.o main.o simpson.o parser.o
+OBJS = scanner.o main.o simpson.o parser.o stqu.o
 TARGET = integrate
 
 default: $(TARGET)
@@ -18,6 +18,8 @@ scanner.o: scanner.c scanner.h
 simpson.o: simpson.c simpson.h
 
 parser.o: parser.c parser.h
+
+stqu.o: stqu.c stqu.h
 
 clean:
 	rm -f $(OBJS) $(TARGET)
