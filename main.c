@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "ast.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +15,8 @@ int main(int argc, char *argv[])
     exit(1);
   }
   
-  parse_equ(equ);
+  ast_t *ast = parse_equ(equ);
+  printf("%Lf\n", evaluate_ast(ast, 2));
 
   return EXIT_SUCCESS;
 }

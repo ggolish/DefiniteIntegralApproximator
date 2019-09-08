@@ -7,10 +7,6 @@
 
 static void process_operator(token_t *tok, stack_t *opstack, queue_t *outqueue);
 static void process_rparen(stack_t *opstack, queue_t *outqueue);
-static ast_t *make_ast(queue_t *outqueue);
-static ast_t *new_ast();
-static ast_node_t *new_ast_node(token_t *tok);
-static void process_token(token_t *t, stack_t *node_stack);
 
 // Parses an equation and returns the appropriate abstract syntax tree
 ast_t *parse_equ(char *equ)
@@ -76,69 +72,5 @@ static void process_rparen(stack_t *opstack, queue_t *outqueue)
     push_queue(outqueue, (void *)top);
     top = (void *)pop_stack(opstack);
   }
-}
-
-static ast_t *make_ast(queue_t *outqueue)
-{
-  ast_t *ast = new_ast();
-  stack_t *node_stack = new_stack();
-
-  token_t *t = (token_t *)pop_queue(outqueue);
-  while(!isempty_queue(outqueue)) {
-    process_token(t, node_stack);
-    t = (token_t *)pop_queue(outqueue);
-  }
-  process_token(t, node_stack);
-
-  if(node_stack->size != 1) {
-    fprintf(stderr, "Unbalanced equation! Node stack left: %d\n", node_stack->size);
-    return NULL;
-  }
-  
-  ast->root = (ast_node_t *)pop_stack(node_stack);
-  return ast;
-}
-
-static void process_token(token_t *t, stack_t *node_stack)
-{
-  ast_node_t *n = new_ast_node(t);
-  if(t->prec == OPPREC_0) {
-    push_stack(node_stack, (void *)n);
-  } else if(t->prec < OPPREC_4) {
-    n->right = (ast_node_t *)pop_stack(node_stack);
-    n->left = (ast_node_t *)pop_stack(node_stack);
-    push_stack(node_stack, (void *)n);
-  } else {
-    n->right = (ast_node_t *)pop_stack(node_stack);
-    push_stack(node_stack, (void *)n);
-  }
-}
-
-static ast_t *new_ast()
-{
-  ast_t *ast = NULL;
-
-  if((ast = (ast_t *)malloc(sizeof(ast_t))) == NULL) {
-    fprintf(stderr, "Error: Malloc failed!\n");
-    return NULL;
-  }
-
-  ast->root = NULL;
-  ast->var_nodes = NULL;
-  return ast;
-}
-static ast_node_t *new_ast_node(token_t *tok)
-{
-  ast_node_t *n = NULL;
-
-  if((n = (ast_node_t *)malloc(sizeof(ast_node_t))) == NULL) {
-    fprintf(stderr, "Error: Malloc failed!\n");
-    return NULL;
-  }
-
-  n->tok = tok;
-  n->value = NAN;
-  n->left = n->right = NULL;
-  return n;
 }
 

@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -g
-OBJS = scanner.o main.o simpson.o parser.o stqu.o
+CLIBS = -lm
+OBJS = scanner.o main.o simpson.o parser.o stqu.o ast.o
 TARGET = integrate
 
 default: $(TARGET)
@@ -9,7 +10,7 @@ default: $(TARGET)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(CLIBS)
 
 main.o: main.c
 
@@ -20,6 +21,8 @@ simpson.o: simpson.c simpson.h
 parser.o: parser.c parser.h
 
 stqu.o: stqu.c stqu.h
+
+ast.o: ast.c ast.h
 
 clean:
 	rm -f $(OBJS) $(TARGET)
