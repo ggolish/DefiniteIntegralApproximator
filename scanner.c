@@ -53,6 +53,14 @@ token_t *next_token()
       c = advance();
       add_rep(c);
     }
+    if(peek() == '.') {
+      c = advance();
+      add_rep(c);
+      while(isdigit(peek())) {
+        c = advance();
+        add_rep(c);
+      }
+    }
     end_rep();
     return make_token(TOK_NUM, OPPREC_0);
   }
