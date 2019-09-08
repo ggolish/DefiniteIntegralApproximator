@@ -1,4 +1,4 @@
-#include "scanner.h"
+#include "parser.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,13 +13,8 @@ int main(int argc, char *argv[])
     fprintf(stderr, "Error: No input equation was read!\n");
     exit(1);
   }
-
-  init_scanner(equ);
-  token_t *t = next_token();
-  while(t->type != TOK_EOF) {
-    print_token(t);
-    t = next_token();
-  }
   
+  parse_equ(equ);
+
   return EXIT_SUCCESS;
 }

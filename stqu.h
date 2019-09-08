@@ -20,11 +20,13 @@ typedef struct {
 } stack_t;
 
 queue_t *new_queue();
+void *peek_queue(queue_t *q);
 void push_queue(queue_t *q, void *v);
 void *pop_queue(queue_t *q);
 bool isempty_queue(queue_t *q);
 
 stack_t *new_stack();
+void *peek_stack(stack_t *s);
 void push_stack(stack_t *q, void *v);
 void *pop_stack(stack_t *q);
 bool isempty_stack(stack_t *q);

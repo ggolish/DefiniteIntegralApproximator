@@ -17,7 +17,7 @@ static int rep_index = 0;
 static char advance();
 static char peek();
 static bool finished();
-static token_t *make_token(token_type_t type);
+static token_t *make_token(token_type_t type, int prec);
 static void add_rep(char c);
 static void end_rep();
 static void clear_rep();
@@ -43,7 +43,7 @@ token_t *next_token()
   while(isspace(c)) c = advance();
 
   // Check if we are out of input
-  if(finished()) return make_token(TOK_EOF);
+  if(finished()) return make_token(TOK_EOF, OPPREC_0);
 
   add_rep(c);
   
@@ -54,7 +54,7 @@ token_t *next_token()
       add_rep(c);
     }
     end_rep();
-    return make_token(TOK_NUM);
+    return make_token(TOK_NUM, OPPREC_0);
   }
 
   // Check if the token is a variable or function name
@@ -66,42 +66,42 @@ token_t *next_token()
     end_rep();
     if(peek() == '(') {
       if(strcmp("sin", rep) == 0) {
-        return make_token(TOK_SIN);
+        return make_token(TOK_SIN, OPPREC_4);
       }
       if(strcmp("cos", rep) == 0) {
-        return make_token(TOK_COS);
+        return make_token(TOK_COS, OPPREC_4);
       }
       if(strcmp("tan", rep) == 0) {
-        return make_token(TOK_TAN);
+        return make_token(TOK_TAN, OPPREC_4);
       }
       if(strcmp("sqrt", rep) == 0) {
-        return make_token(TOK_SQRT);
+        return make_token(TOK_SQRT, OPPREC_4);
       }
-      return make_token(TOK_UNKNOWN);
+      return make_token(TOK_UNKNOWN, OPPREC_0);
     } else {
-      return make_token(TOK_VAR);
+      return make_token(TOK_VAR, OPPREC_0);
     }
   }
 
   // Find single character tokens
   switch(c) {
     case '+':
-      return make_token(TOK_PLUS);
+      return make_token(TOK_PLUS, OPPREC_1);
     case '-':
-      return make_token(TOK_MINUS);
+      return make_token(TOK_MINUS, OPPREC_1);
     case '*':
-      return make_token(TOK_MULT);
+      return make_token(TOK_MULT, OPPREC_2);
     case '/':
-      return make_token(TOK_DIV);
+      return make_token(TOK_DIV, OPPREC_2);
     case '^':
-      return make_token(TOK_EXP);
+      return make_token(TOK_EXP, OPPREC_3);
     case '(':
-      return make_token(TOK_LPAREN);
+      return make_token(TOK_LPAREN, OPPREC_0);
     case ')':
-      return make_token(TOK_RPAREN);
+      return make_token(TOK_RPAREN, OPPREC_0);
   }
 
-  return make_token(TOK_UNKNOWN);
+  return make_token(TOK_UNKNOWN, OPPREC_0);
 }
 
 // Prints a token based on its type
@@ -177,7 +177,7 @@ static bool finished()
 }
 
 // Creates a new token of a given type
-static token_t *make_token(token_type_t type)
+static token_t *make_token(token_type_t type, int prec)
 {
   token_t *tok = NULL;
   
@@ -188,6 +188,7 @@ static token_t *make_token(token_type_t type)
 
   // Fill in token attributes
   tok->type = type;
+  tok->prec = prec;
   tok->rep = strdup(rep);
   clear_rep();
 

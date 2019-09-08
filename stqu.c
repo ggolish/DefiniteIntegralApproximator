@@ -19,16 +19,22 @@ queue_t *new_queue()
   return q;
 }
 
+void *peek_queue(queue_t *q)
+{
+  if(isempty_queue(q)) return NULL;
+  return q->head->value;
+}
+
 void push_queue(queue_t *q, void *v)
 {
   llnode_t *tmp = new_llnode(v);
-  q->size++;
   if(isempty_queue(q)) {
     q->head = q->tail = tmp;
   } else {
     q->tail->next = tmp;
     q->tail = tmp;
   }
+  q->size++;
 }
 
 void *pop_queue(queue_t *q)
@@ -65,16 +71,22 @@ stack_t *new_stack()
   return s;
 }
 
+void *peek_stack(stack_t *s)
+{
+  if(isempty_stack(s)) return NULL;
+  return s->head->value;
+}
+
 void push_stack(stack_t *s, void *v)
 {
   llnode_t *tmp = new_llnode(v);
-  s->size++;
   if(isempty_stack(s)) {
     s->head = tmp;
   } else {
     tmp->next = s->head;
     s->head = tmp;
   }
+  s->size++;
 }
 
 void *pop_stack(stack_t *s)

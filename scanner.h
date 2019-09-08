@@ -1,6 +1,12 @@
 #ifndef SCANNER_H_
 #define SCANNER_H_
 
+#define OPPREC_0 0 // Precedence doesn't matter
+#define OPPREC_1 1 // + -
+#define OPPREC_2 2 // * /
+#define OPPREC_3 3 // ^
+#define OPPREC_4 4 // functions
+
 typedef enum {
 
   // VARIABLE/NUMBER TOKEN
@@ -18,8 +24,9 @@ typedef enum {
 } token_type_t;
 
 typedef struct {
-  token_type_t type;
-  char *rep;
+  token_type_t type;  // token type
+  int prec;           // precedence of token (if operator)
+  char *rep;          // string representation of token
 } token_t;
 
 void init_scanner(char *equ);
