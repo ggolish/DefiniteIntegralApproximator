@@ -5,7 +5,7 @@
 
 // A single node of the abstract syntax tree
 typedef struct node {
-  token_t tok;
+  token_t *tok;
   long double value;
   struct node *left, *right;
 } ast_node_t;
