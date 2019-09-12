@@ -73,16 +73,19 @@ token_t *next_token()
     }
     end_rep();
     if(peek() == '(') {
-      if(strcmp("sin", rep) == 0) {
+      if(strcasecmp("sin", rep) == 0) {
         return make_token(TOK_SIN, OPPREC_4);
       }
-      if(strcmp("cos", rep) == 0) {
+      if(strcasecmp("cos", rep) == 0) {
         return make_token(TOK_COS, OPPREC_4);
       }
-      if(strcmp("tan", rep) == 0) {
+      if(strcasecmp("tan", rep) == 0) {
         return make_token(TOK_TAN, OPPREC_4);
       }
-      if(strcmp("sqrt", rep) == 0) {
+      if(strcasecmp("sqrt", rep) == 0) {
+        return make_token(TOK_SQRT, OPPREC_4);
+      }
+      if(strcasecmp("ln", rep) == 0) {
         return make_token(TOK_SQRT, OPPREC_4);
       }
       return make_token(TOK_UNKNOWN, OPPREC_0);
@@ -154,6 +157,9 @@ void print_token(token_t *tok)
       break;
     case TOK_SQRT:
       printf("TOK_SQRT\n");
+      break;
+    case TOK_LN:
+      printf("TOK_LN\n");
       break;
     case TOK_EOF:
       printf("TOK_EOF\n");

@@ -39,6 +39,7 @@ ast_t *parse_equ(char *equ)
       case TOK_COS:
       case TOK_TAN:
       case TOK_SQRT:
+      case TOK_LN:
         push_stack(opstack, (void *)tok);
         break;
       case TOK_UNKNOWN:

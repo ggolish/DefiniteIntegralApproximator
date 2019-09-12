@@ -24,8 +24,10 @@ int main(int argc, char *argv[])
   
   ast_t *ast = parse_equ(equ);
 
-  // TODO: Move the stablizing process below to its own function in the simpson
-  // module
+  if(!ast) {
+    fprintf(stderr, "Error: Unable to parse equation.\n");
+    exit(1);
+  }
 
   // Keep approximating the integral, doubling the number of subdivisions each
   // time, until the approximation stablizes

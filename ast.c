@@ -7,7 +7,7 @@
 static ast_t *new_ast();
 static ast_node_t *new_ast_node(token_t *tok);
 static long double evaluate_node(ast_node_t *n, long double var_val);
-static void process_token(token_t *t, stack_t *node_stack);
+static int process_token(token_t *t, stack_t *node_stack);
 
 ast_t *make_ast(queue_t *outqueue)
 {
@@ -19,7 +19,11 @@ ast_t *make_ast(queue_t *outqueue)
     process_token(t, node_stack);
     t = (token_t *)pop_queue(outqueue);
   }
-  process_token(t, node_stack);
+  
+  if(process_token(t, node_stack) == -1) {
+    fprintf(stderr, "Error: Unbalanced equation!\n");
+    return NULL;
+  }
 
   if(node_stack->size != 1) {
     fprintf(stderr, "Unbalanced equation! Node stack left: %d\n", node_stack->size);
@@ -81,6 +85,9 @@ static long double evaluate_node(ast_node_t *n, long double var_val)
     case TOK_SQRT:
       n->value = sqrtl(rv);
       break;
+    case TOK_LN:
+      n->value = logl(rv);
+      break;
     default:
       fprintf(stderr, "Invalid token is ast!\n");
       break;
@@ -89,19 +96,22 @@ static long double evaluate_node(ast_node_t *n, long double var_val)
   return n->value;
 }
 
-static void process_token(token_t *t, stack_t *node_stack)
+static int process_token(token_t *t, stack_t *node_stack)
 {
   ast_node_t *n = new_ast_node(t);
   if(t->prec == OPPREC_0) {
     push_stack(node_stack, (void *)n);
   } else if(t->prec < OPPREC_4) {
+    if(node_stack->size < 2) return -1;
     n->right = (ast_node_t *)pop_stack(node_stack);
     n->left = (ast_node_t *)pop_stack(node_stack);
     push_stack(node_stack, (void *)n);
   } else {
+    if(node_stack->size < 1) return -1;
     n->right = (ast_node_t *)pop_stack(node_stack);
     push_stack(node_stack, (void *)n);
   }
+  return 1;
 }
 
 static ast_t *new_ast()
