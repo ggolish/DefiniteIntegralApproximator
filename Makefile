@@ -1,28 +1,46 @@
+CFLAGS = -Wall -g -Iinclude
 CC = gcc
-CFLAGS = -Wall -g
-CLIBS = -lm
-OBJS = scanner.o main.o simpson.o parser.o stqu.o ast.o
+
+.SUFFIXES: .c .o
+
+.c.o:
+	$(CC) -c $(CFLAGS) $*.c -o $*.o
+
+OBJS = \
+	src/ast.c	\
+	src/main.c	\
+	src/parser.c	\
+	src/scanner.c	\
+	src/simpson.c	\
+	src/stqu.c	\
+
 TARGET = integrate
 
 default: $(TARGET)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+$(TARGET): $(OBJS:.c=.o)
+	$(CC) $(CFLAGS) $^ -o $(TARGET) -lm
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(CLIBS)
+ast.o: src/ast.c include/ast.h
 
-main.o: main.c
+main.o: src/main.c include/simpson.h include/parser.h include/ast.h
 
-scanner.o: scanner.c scanner.h
+parser.o: src/parser.c include/parser.h include/stqu.h
 
-simpson.o: simpson.c simpson.h
+scanner.o: src/scanner.c include/scanner.h
 
-parser.o: parser.c parser.h
+simpson.o: src/simpson.c include/simpson.h
 
-stqu.o: stqu.c stqu.h
+stqu.o: src/stqu.c include/stqu.h
 
-ast.o: ast.c ast.h
+run: $(TARGET)
+	./$(TARGET)
 
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f src/ast.o
+	rm -f src/main.o
+	rm -f src/parser.o
+	rm -f src/scanner.o
+	rm -f src/simpson.o
+	rm -f src/stqu.o
+	rm -f $(TARGET)
