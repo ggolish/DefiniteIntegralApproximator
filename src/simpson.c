@@ -7,10 +7,18 @@
 #include <math.h>
 
 static bool is_valid_equ(ast_t *equ, args_t *args);
+static long double **generate_sample_values(args_t *args, int nsamples);
+static void print_sample_values(long double **values_list, args_t *args, int nsamples);
+static void destroy_sample_values(long double **values_list, args_t *args);
 
 long double simpson_approximate_integral(ast_t *equ, args_t *args)
 {
   if(!is_valid_equ(equ, args)) exit(1);
+
+  long double **values_list = generate_sample_values(args, 5);
+  print_sample_values(values_list, args, 5);
+  destroy_sample_values(values_list, args);
+
   return NAN;
 }
 
@@ -66,3 +74,42 @@ static bool is_valid_equ(ast_t *equ, args_t *args)
 
   return true;
 }
+
+static long double **generate_sample_values(args_t *args, int nsamples)
+{
+  long double **values_list = (long double **)safe_malloc(
+      args->integral_dimension * sizeof(long double *));
+
+  for(int i = 0; i < args->integral_dimension; ++i) {
+    values_list[i] = (long double *)safe_malloc(nsamples * sizeof(long double));
+    integral_params_t *curr = args->params_list[i];
+    long double delta = (curr->to - curr->from) / nsamples;
+    long double s = curr->from;
+    for(int j = 0; j < nsamples; ++j) {
+      values_list[i][j] = s;
+      s += delta;
+    }
+  }
+
+  return values_list;
+}
+
+static void print_sample_values(long double **values_list, args_t *args, int nsamples)
+{
+  for(int i = 0; i < args->integral_dimension; ++i) {
+    printf("%c: ", args->params_list[i]->variable);
+    for(int j = 0; j < nsamples; ++j) {
+      printf("%.2Lf ", values_list[i][j]);
+    }
+    printf("\n");
+  }
+}
+
+static void destroy_sample_values(long double **values_list, args_t *args)
+{
+  for(int i = 0; i < args->integral_dimension; ++i) {
+    free(values_list[i]);
+  }
+  free(values_list);
+}
+
