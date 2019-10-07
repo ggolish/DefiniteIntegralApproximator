@@ -65,8 +65,6 @@ void read_integral_params(args_t *args)
       exit(1);
     }
 
-    args_destroy(args);
-
     args->params_list[i] = params_new(from, to, v);
   }
 }

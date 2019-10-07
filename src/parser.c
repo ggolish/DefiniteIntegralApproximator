@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 
 static void process_operator(token_t *tok, stack_t *opstack, queue_t *outqueue);
@@ -19,6 +20,10 @@ ast_t *parse_equ(char *equ)
   while(tok->type != TOK_EOF) {
     switch(tok->type) {
       case TOK_VAR:
+        if(strlen(tok->rep) != 1) {
+          fprintf(stderr, "Error: Variable name '%s' longer than one character!\n", tok->rep);
+          exit(1);
+        }
       case TOK_NUM:
         push_queue(outqueue, (void *)tok);
         break;

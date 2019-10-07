@@ -1,13 +1,17 @@
 #include "ast.h"
+#include "utility.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
+#define CHUNK 2
+
 static ast_t *new_ast();
 static ast_node_t *new_ast_node(token_t *tok);
 static long double evaluate_node(ast_node_t *n, long double var_val);
 static int process_token(token_t *t, stack_t *node_stack);
+static void ast_add_variable(ast_t *ast, char v);
 
 ast_t *make_ast(queue_t *outqueue)
 {
@@ -17,6 +21,11 @@ ast_t *make_ast(queue_t *outqueue)
   token_t *t = (token_t *)pop_queue(outqueue);
   while(!isempty_queue(outqueue)) {
     process_token(t, node_stack);
+
+    if(t->type == TOK_VAR) {
+      ast_add_variable(ast, t->rep[0]);
+    }
+
     t = (token_t *)pop_queue(outqueue);
   }
   
@@ -111,6 +120,7 @@ static int process_token(token_t *t, stack_t *node_stack)
     n->right = (ast_node_t *)pop_stack(node_stack);
     push_stack(node_stack, (void *)n);
   }
+
   return 1;
 }
 
@@ -124,6 +134,8 @@ static ast_t *new_ast()
   }
 
   ast->root = NULL;
+  ast->variables = NULL;
+  ast->vlen = ast->vcap = 0;
   return ast;
 }
 
@@ -140,5 +152,15 @@ static ast_node_t *new_ast_node(token_t *tok)
   n->value = NAN;
   n->left = n->right = NULL;
   return n;
+}
+
+static void ast_add_variable(ast_t *ast, char v)
+{
+  if(ast->vlen >= ast->vcap - 1) {
+    ast->vcap = (ast->vcap == 0) ? CHUNK : ast->vcap * 2;
+    ast->variables = (char *)safe_realloc(ast->variables, 
+        ast->vcap * sizeof(char));
+  } 
+  ast->variables[ast->vlen++] = v;
 }
 

@@ -14,6 +14,10 @@ int main(int argc, char *argv[])
   if(!args->params_list) read_integral_params(args);
   if(!args->equation) read_equation(args);
 
+  args_print(args);
+
+  ast_t *equ = parse_equ(args->equation);
+
 //   ast_t *ast = parse_equ(equ);
 // 
 //   if(!ast) {

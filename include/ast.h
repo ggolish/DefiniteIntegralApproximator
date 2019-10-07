@@ -14,6 +14,9 @@ typedef struct node {
 // The abstract syntax tree
 typedef struct {
   ast_node_t *root;
+  char *variables;
+  int vlen;
+  int vcap;
 } ast_t;
 
 ast_t *make_ast(queue_t *outqueue);

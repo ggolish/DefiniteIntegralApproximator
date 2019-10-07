@@ -25,7 +25,7 @@ $(TARGET): $(OBJS:.c=.o)
 
 args.o: src/args.c include/args.h include/utility.h
 
-ast.o: src/ast.c include/ast.h
+ast.o: src/ast.c include/ast.h include/utility.h
 
 main.o: src/main.c include/simpson.h include/parser.h include/ast.h include/args.h
 
