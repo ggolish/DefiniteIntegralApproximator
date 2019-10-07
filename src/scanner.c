@@ -16,7 +16,6 @@ static int rep_index = 0;
 
 static char advance();
 static char peek();
-static bool finished();
 static token_t *make_token(token_type_t type, int prec);
 static void add_rep(char c);
 static void end_rep();
@@ -186,12 +185,6 @@ static char advance()
 static char peek()
 {
   return *curr;
-}
-
-// Determines whether the end of input has been reached
-static bool finished()
-{
-  return (*curr == '\0'); 
 }
 
 // Creates a new token of a given type
