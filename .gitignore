@@ -1,3 +1,6 @@
+#   Ignore target executable
+integrate
+
 #   Vim
 
 # Swap
