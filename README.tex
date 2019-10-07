@@ -1,0 +1,156 @@
+% Created 2019-10-07 Mon 19:40
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage[margin=1in, paperwidth=8.5in, paperheight=11in]{geometry}
+\author{Gage Golish}
+\date{Fall 2019}
+\title{Definite Integral Approximator}
+\hypersetup{
+ pdfauthor={Gage Golish},
+ pdftitle={Definite Integral Approximator},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+\section{Overview}
+\label{sec:orgc539d49}
+A program for approximating definite integrals, written for MATH
+613 - Applied Linear Algebra course at Indiana State University. The
+program uses \href{https://en.wikipedia.org/wiki/Simpson\%27s\_rule}{Simpson's one-third} rule for the approximation:
+$$\displaystyle \int _{a}^{b}f(x)\,dx\approx {\tfrac {\Delta
+  x}{3}}\left(f(x_{0})+4f(x_{1})+2f(x_{2})+4f(x_{3})+2f(x_{4})+\cdots
+  +4f(x_{n-1})+f(x_{n})\right).$$
+This program uses the extended form of Simpson's rule for
+approximating n-dimensional integrals.
+
+\section{Highlights}
+\label{sec:orge958625}
+The following are some implementation details that are of note.
+
+\subsection{Extendable Equation Parser}
+\label{sec:org25a15be}
+The program contains a custom tokenizer (\texttt{scanner.c}) and parser
+(\texttt{parser.c}) that converts an infix input equation to an abstract
+syntax tree (\texttt{ast.c}). Representing the equation as an AST allows
+for computing the equation on many values efficiently. It is also a
+simple matter to extend the scanner and parser to handle new
+operators and functions.
+
+\subsection{Flexible Mesh Size}
+\label{sec:orgec9d46b}
+The program uses an adaptive approach for choosing the mesh
+size. Starting at a low value, the mesh size is doubled until the
+approximation converges to within four decimal places (\texttt{simpson.c}). The
+mesh size is part of the output of the program.
+
+\subsection{N-Dimensional Integrals}
+\label{sec:org3e83043}
+The program was built from the ground up to accomadate
+n-dimensional integrals. The program accepts as input the integral
+dimension and then a list of integral specifications that consist
+of the start and end of the integral, as well as the variable the
+integral should be performed on (\texttt{args.c}, \texttt{simpson.c}). See the
+Usage section for more details.
+
+\section{Usage}
+\label{sec:org39d6fd7}
+
+\subsection{Input}
+\label{sec:org6ab8e84}
+The program accepts as input an infix equation that can contain
+numbers, functions, one-character variables, and operators.
+
+\subsubsection{Supported Operators}
+\label{sec:org776dd5a}
+\begin{itemize}
+\item \texttt{+} (addition)
+\item \texttt{-} (subtraction)
+\item \texttt{*} (multiplication)
+\item \texttt{/} (division)
+\item \texttt{\textasciicircum{}} (exponentiation)
+\item \texttt{(} (open parenthesis)
+\item \texttt{)} (closing paranthesis)
+\end{itemize}
+
+\subsubsection{Supported Functions}
+\label{sec:orgaaa5863}
+\begin{itemize}
+\item \texttt{sin} (sine)
+\item \texttt{cos} (cosine)
+\item \texttt{tan} (tangent)
+\item \texttt{ln} (natrual logarithm)
+\item \texttt{sqrt} (square root)
+\end{itemize}
+
+\subsection{Build}
+\label{sec:orgaa93e15}
+To build the project, run the following command in the root
+directory of the project: 
+
+\noindent
+\texttt{make integrate}
+
+\noindent
+This command produces the target executable \texttt{integrate}.
+
+\subsection{Command Line Arguments}
+\label{sec:org9fe7278}
+\begin{itemize}
+\item -n <dimension>: Specifies the integral dimension as <dimension>.
+\item -p <params-list>: Specifies the list of integral
+specifications. A colon (\texttt{:}) separated list of comma (\texttt{,})
+separated specifications e.g. \texttt{0,3,x:0,3,y} specifies a double
+integral in which the variable \texttt{x} (the outer integral) is
+integrates over the range [0, 3] and variable \texttt{y} (the inner
+integral) is integrated over the range [0, 3].
+\item -e <equation>: Specifies the equation to integrate.
+\end{itemize}
+
+\subsection{Default Behavior}
+\label{sec:orgbd57abb}
+If no command line arguments are given, the program will expect the
+user to first input the integral specification, then the
+equation. One or the other may be passed as command line arguments,
+while the other is read from \texttt{stdin}. For example,
+\begin{verbatim}
+./integrate 
+0 3.14 x
+sin(x)
+\end{verbatim}
+is the \texttt{stdin} way of specifying \(\int_0^\pi \sin(x) dx\). The
+command line way would be:
+\begin{verbatim}
+./integrate -n 1 -p `0,3.14,x' -e `sin(x)'
+\end{verbatim}
+
+\subsection{run\_tests.sh}
+\label{sec:org17cef09}
+Run the interactive program \texttt{run\_tests.sh} to perform some test
+examples using the program. The test examples are as follows:
+\begin{itemize}
+\item \(\displaystyle{\int_0^{2\pi} \sin(x) dx}\)
+\item \(\displaystyle{\int_0^{2\pi} \cos(x) dx}\)
+\item \(\displaystyle{\int_0^{10} \sin(x^2 + 1) dx}\)
+\item \(\displaystyle{\int_{10}^{20} \sin(x^2 + 1) dx}\)
+\item \(\displaystyle{\int_{-1}^{1} \int_1^2 x^2y + xy^2 dx dy}\)
+\end{itemize}
+\end{document}

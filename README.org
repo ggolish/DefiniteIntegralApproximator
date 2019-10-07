@@ -1,0 +1,113 @@
+#+TITLE: Definite Integral Approximator
+#+AUTHOR: Gage Golish
+#+DATE: Fall 2019
+
+#+OPTIONS: ^:nil 
+
+#+LATEX_HEADER: \usepackage[margin=1in, paperwidth=8.5in, paperheight=11in]{geometry}
+
+* Overview
+  A program for approximating definite integrals, written for MATH
+  613 - Applied Linear Algebra course at Indiana State University. The
+  program uses [[https://en.wikipedia.org/wiki/Simpson%27s_rule][Simpson's one-third]] rule for the approximation:
+  $$\displaystyle \int _{a}^{b}f(x)\,dx\approx {\tfrac {\Delta
+  x}{3}}\left(f(x_{0})+4f(x_{1})+2f(x_{2})+4f(x_{3})+2f(x_{4})+\cdots
+  +4f(x_{n-1})+f(x_{n})\right).$$
+  This program uses the extended form of Simpson's rule for
+  approximating n-dimensional integrals.
+
+* Highlights
+  The following are some implementation details that are of note.
+
+** Extendable Equation Parser
+   The program contains a custom tokenizer (~scanner.c~) and parser
+   (~parser.c~) that converts an infix input equation to an abstract
+   syntax tree (~ast.c~). Representing the equation as an AST allows
+   for computing the equation on many values efficiently. It is also a
+   simple matter to extend the scanner and parser to handle new
+   operators and functions.
+
+** Flexible Mesh Size
+   The program uses an adaptive approach for choosing the mesh
+   size. Starting at a low value, the mesh size is doubled until the
+   approximation converges to within four decimal places (~simpson.c~). The
+   mesh size is part of the output of the program.
+
+** N-Dimensional Integrals
+   The program was built from the ground up to accomadate
+   n-dimensional integrals. The program accepts as input the integral
+   dimension and then a list of integral specifications that consist
+   of the start and end of the integral, as well as the variable the
+   integral should be performed on (~args.c~, ~simpson.c~). See the
+   Usage section for more details.
+
+* Usage
+
+** Input
+   The program accepts as input an infix equation that can contain
+   numbers, functions, one-character variables, and operators.
+
+*** Supported Operators
+    - ~+~ (addition)
+    - ~-~ (subtraction)
+    - ~*~ (multiplication)
+    - ~/~ (division)
+    - ~^~ (exponentiation)
+    - ~(~ (open parenthesis)
+    - ~)~ (closing paranthesis)
+
+*** Supported Functions
+    - ~sin~ (sine)
+    - ~cos~ (cosine)
+    - ~tan~ (tangent)
+    - ~ln~ (natrual logarithm)
+    - ~sqrt~ (square root)
+
+** Build
+   To build the project, run the following command in the root
+   directory of the project: 
+   
+    #+BEGIN_EXPORT latex
+    \noindent
+    #+END_EXPORT
+   ~make integrate~
+
+    #+BEGIN_EXPORT latex
+    \noindent
+    #+END_EXPORT
+   This command produces the target executable ~integrate~.
+
+** Command Line Arguments
+   - -n <dimension>: Specifies the integral dimension as <dimension>.
+   - -p <params-list>: Specifies the list of integral
+     specifications. A colon (~:~) separated list of comma (~,~)
+     separated specifications e.g. ~0,3,x:0,3,y~ specifies a double
+     integral in which the variable ~x~ (the outer integral) is
+     integrates over the range [0, 3] and variable ~y~ (the inner
+     integral) is integrated over the range [0, 3].
+   - -e <equation>: Specifies the equation to integrate.
+
+** Default Behavior
+   If no command line arguments are given, the program will expect the
+   user to first input the integral specification, then the
+   equation. One or the other may be passed as command line arguments,
+   while the other is read from ~stdin~. For example,
+   #+BEGIN_SRC shell
+   ./integrate 
+   0 3.14 x
+   sin(x)
+   #+END_SRC
+   is the ~stdin~ way of specifying $\int_0^\pi \sin(x) dx$. The
+   command line way would be:
+   #+BEGIN_SRC shell
+   ./integrate -n 1 -p `0,3.14,x' -e `sin(x)'
+   #+END_SRC
+
+** run_tests.sh
+   Run the interactive program ~run_tests.sh~ to perform some test
+   examples using the program. The test examples are as follows:
+   - $\displaystyle{\int_0^{2\pi} \sin(x) dx}$ 
+   - $\displaystyle{\int_0^{2\pi} \cos(x) dx}$
+   - $\displaystyle{\int_0^{10} \sin(x^2 + 1) dx}$ 
+   - $\displaystyle{\int_{10}^{20} \sin(x^2 + 1) dx}$ 
+   - $\displaystyle{\int_{-1}^{1} \int_1^2 x^2y + xy^2 dx dy}$ 
