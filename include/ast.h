@@ -4,6 +4,11 @@
 #include "scanner.h"
 #include "stqu.h"
 
+typedef struct {
+  char name;
+  long double value;
+} var_t;
+
 // A single node of the abstract syntax tree
 typedef struct node {
   token_t *tok;
@@ -20,6 +25,6 @@ typedef struct {
 } ast_t;
 
 ast_t *make_ast(queue_t *outqueue);
-long double evaluate_ast(ast_t *ast, long double var_val);
+long double evaluate_ast(ast_t *ast, var_t *variables);
 
 #endif

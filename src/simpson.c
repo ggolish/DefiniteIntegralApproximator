@@ -7,33 +7,68 @@
 #include <math.h>
 
 static bool is_valid_equ(ast_t *equ, args_t *args);
-static long double **generate_sample_values(args_t *args, int nsamples);
-static void print_sample_values(long double **values_list, args_t *args, int nsamples);
-static void destroy_sample_values(long double **values_list, args_t *args);
+static long double simspon_integrate(ast_t *equ, args_t *args, int nsamples);
+static long double simpson_summation(ast_t *equ, args_t *args, int nsamples, var_t *curr_variables, int current_dim, long double coefficient);
 
 long double simpson_approximate_integral(ast_t *equ, args_t *args)
 {
   if(!is_valid_equ(equ, args)) exit(1);
 
-  long double **values_list = generate_sample_values(args, 5);
-  print_sample_values(values_list, args, 5);
-  destroy_sample_values(values_list, args);
+  int nsamples = 2;
+  long double prev_est = simspon_integrate(equ, args, nsamples);
 
-  return NAN;
+  for(;;) {
+    nsamples *= 2;
+    printf("Using mesh size %d...\n", nsamples);
+    long double curr_est = simspon_integrate(equ, args, nsamples);
+    if(fabsl(curr_est - prev_est) < 0.0000001L) {
+      prev_est = curr_est;
+      break;
+    }
+    prev_est = curr_est;
+  }
+
+  return prev_est;
 }
 
-// Approximates the definite integral given by the abstract syntax tree from a
-// to b using n subdivisions
-long double integrate_simpson(ast_t *ast, long double a, long double b, int n) {
-  long double delta = (b - a) / n;
-  long double sum = evaluate_ast(ast, a);
-  long double a_i = a + delta;
-  for(int i = 0; i < n - 1; ++i) {
-    sum += ((i & 1)) ? (2.0L * evaluate_ast(ast, a_i)) : (4.0L * evaluate_ast(ast, a_i));
-    a_i += delta;
+static long double simspon_integrate(ast_t *equ, args_t *args, int nsamples)
+{
+  var_t *variables = (var_t *)safe_malloc(args->integral_dimension * sizeof(var_t));
+  long double sum = simpson_summation(equ, args, nsamples, variables, 1, 1.0L);
+  long double nthird = 1;
+  for(int i = 0; i < args->integral_dimension; ++i) {
+    long double delta = (args->params_list[i]->to - args->params_list[i]->from) / nsamples;
+    nthird *= delta / 3.0L;
   }
-  sum += evaluate_ast(ast, a_i);
-  return (delta / 3.0L) * sum;
+
+  return nthird * sum;
+}
+
+static long double simpson_summation(
+    ast_t *equ,
+    args_t *args,
+    int nsamples,
+    var_t *curr_variables, 
+    int current_dim, 
+    long double coefficient)
+
+{
+  integral_params_t *params = args->params_list[current_dim - 1];
+  long double sum = 0.0L;
+  long double delta = (params->to - params->from) / nsamples;
+  for(int i = 0; i <= nsamples; ++i) {
+    long double m = (i == 0 || i == nsamples) ? (1.0L) : ((i % 2 == 0) ? (2.0L) : (4.0L));
+    long double curr_coeficient = coefficient * m;
+    long double curr_value = params->from + i * delta;
+    curr_variables[current_dim] = (var_t){.name = params->variable, .value = curr_value};
+    if(current_dim == args->integral_dimension) {
+      sum += curr_coeficient * evaluate_ast(equ, curr_variables);
+    } else {
+      sum += simpson_summation(equ, args, nsamples, curr_variables, current_dim + 1, curr_coeficient);
+    }
+  }
+
+  return sum;
 }
 
 static bool is_valid_equ(ast_t *equ, args_t *args)
@@ -73,43 +108,5 @@ static bool is_valid_equ(ast_t *equ, args_t *args)
   }
 
   return true;
-}
-
-static long double **generate_sample_values(args_t *args, int nsamples)
-{
-  long double **values_list = (long double **)safe_malloc(
-      args->integral_dimension * sizeof(long double *));
-
-  for(int i = 0; i < args->integral_dimension; ++i) {
-    values_list[i] = (long double *)safe_malloc(nsamples * sizeof(long double));
-    integral_params_t *curr = args->params_list[i];
-    long double delta = (curr->to - curr->from) / nsamples;
-    long double s = curr->from;
-    for(int j = 0; j < nsamples; ++j) {
-      values_list[i][j] = s;
-      s += delta;
-    }
-  }
-
-  return values_list;
-}
-
-static void print_sample_values(long double **values_list, args_t *args, int nsamples)
-{
-  for(int i = 0; i < args->integral_dimension; ++i) {
-    printf("%c: ", args->params_list[i]->variable);
-    for(int j = 0; j < nsamples; ++j) {
-      printf("%.2Lf ", values_list[i][j]);
-    }
-    printf("\n");
-  }
-}
-
-static void destroy_sample_values(long double **values_list, args_t *args)
-{
-  for(int i = 0; i < args->integral_dimension; ++i) {
-    free(values_list[i]);
-  }
-  free(values_list);
 }
 

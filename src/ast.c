@@ -9,7 +9,7 @@
 
 static ast_t *new_ast();
 static ast_node_t *new_ast_node(token_t *tok);
-static long double evaluate_node(ast_node_t *n, long double var_val);
+static long double evaluate_node(ast_node_t *n, var_t *variables, int nvariables);
 static int process_token(token_t *t, stack_t *node_stack);
 static void ast_add_variable(ast_t *ast, char v);
 
@@ -47,18 +47,22 @@ ast_t *make_ast(queue_t *outqueue)
   return ast;
 }
 
-long double evaluate_ast(ast_t *ast, long double var_val)
+long double evaluate_ast(ast_t *ast, var_t *variables)
 {
   if(!ast->root) return NAN;
-  return evaluate_node(ast->root, var_val);
+  return evaluate_node(ast->root, variables, ast->vlen);
 }
 
-static long double evaluate_node(ast_node_t *n, long double var_val)
+static long double evaluate_node(ast_node_t *n, var_t *variables, int nvariables)
 {
   if(!n) return NAN;
   if(n->left == NULL && n->right == NULL) {
     if(n->tok->type == TOK_VAR) {
-      n->value = var_val;
+      for(int i = 0; i < nvariables; ++i) {
+        if(n->tok->rep[0] == variables[i].name) {
+          n->value = variables[i].value;
+        }
+      }
     } else if(n->tok->type == TOK_NUM) {
       if(isnan(n->value)) {
         n->value = strtold(n->tok->rep, NULL); 
@@ -67,8 +71,8 @@ static long double evaluate_node(ast_node_t *n, long double var_val)
     return n->value;
   }
 
-  long double lv = evaluate_node(n->left, var_val);
-  long double rv = evaluate_node(n->right, var_val);
+  long double lv = evaluate_node(n->left, variables, nvariables);
+  long double rv = evaluate_node(n->right, variables, nvariables);
 
   switch(n->tok->type) {
     case TOK_PLUS:
