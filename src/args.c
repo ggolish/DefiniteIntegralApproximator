@@ -139,7 +139,6 @@ static void parse_params_list(char *params_list, args_t *args)
     }
 
     integral_params_t *p = params_new(from, to, v);
-    args_destroy(args);
 
     if(len >= cap - 1) {
       cap = (cap == 0) ? CHUNK : cap * 2;
@@ -156,7 +155,7 @@ static void parse_params_list(char *params_list, args_t *args)
   }
 
   if(len < args->integral_dimension) {
-    fprintf(stderr, "Error: Not enough parameter given for %d dimensional integral!\n", 
+    fprintf(stderr, "Error: Not enough parameters given for %d dimensional integral!\n", 
         args->integral_dimension);
     exit(1);
   }
