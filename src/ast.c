@@ -19,6 +19,10 @@ ast_t *make_ast(queue_t *outqueue)
   stack_t *node_stack = new_stack();
 
   token_t *t = (token_t *)pop_queue(outqueue);
+  if(t->type == TOK_VAR) {
+    ast_add_variable(ast, t->rep[0]);
+  }
+
   while(!isempty_queue(outqueue)) {
     process_token(t, node_stack);
 
@@ -29,7 +33,7 @@ ast_t *make_ast(queue_t *outqueue)
     t = (token_t *)pop_queue(outqueue);
   }
   
-  if(process_token(t, node_stack) == -1) {
+  if(!t || process_token(t, node_stack) == -1) {
     fprintf(stderr, "Error: Unbalanced equation!\n");
     return NULL;
   }

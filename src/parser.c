@@ -48,6 +48,8 @@ ast_t *parse_equ(char *equ)
         push_stack(opstack, (void *)tok);
         break;
       case TOK_UNKNOWN:
+        fprintf(stderr, "Error: Unknown token '%s'!\n", tok->rep);
+        exit(1);
         break;
       case TOK_EOF:
         break;

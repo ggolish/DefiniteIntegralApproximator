@@ -74,9 +74,12 @@ void read_equation(args_t *args)
 {
   size_t n = 0;
   args->equation = NULL;
-  if(getline(&args->equation, &n, stdin) <= 0) {
+  if((n = getline(&args->equation, &n, stdin)) <= 0) {
     fprintf(stderr, "Error: Unable to read equation!\n");
     exit(1);
+  }
+  if(args->equation[n - 1] == '\n') {
+    args->equation[n - 1] = '\0';
   }
 }
 

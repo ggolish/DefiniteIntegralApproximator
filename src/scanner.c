@@ -43,7 +43,7 @@ token_t *next_token()
   while(isspace(c)) c = advance();
 
   // Check if we are out of input
-  if(finished()) return make_token(TOK_EOF, OPPREC_0);
+  if(c == '\0') return make_token(TOK_EOF, OPPREC_0);
 
   add_rep(c);
   
@@ -118,6 +118,10 @@ token_t *next_token()
 // Prints a token based on its type
 void print_token(token_t *tok)
 {
+  if(!tok) {
+    printf("NULL token!\n");
+  }
+
   switch(tok->type) {
     case TOK_VAR:
       printf("TOK_VAR[%s]\n", tok->rep);

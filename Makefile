@@ -33,7 +33,7 @@ parser.o: src/parser.c include/parser.h include/stqu.h
 
 scanner.o: src/scanner.c include/scanner.h
 
-simpson.o: src/simpson.c include/simpson.h
+simpson.o: src/simpson.c include/simpson.h include/utility.h
 
 stqu.o: src/stqu.c include/stqu.h
 

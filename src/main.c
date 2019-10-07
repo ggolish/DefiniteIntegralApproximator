@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
   if(!args->params_list) read_integral_params(args);
   if(!args->equation) read_equation(args);
 
-  args_print(args);
-
   ast_t *equ = parse_equ(args->equation);
+  
+  long double answer = simpson_approximate_integral(equ, args);
 
 //   ast_t *ast = parse_equ(equ);
 // 
@@ -40,6 +40,8 @@ int main(int argc, char *argv[])
 //   }
 // 
 //   printf("%.3Lf\n", ans);
+
+  printf("%.4Lf\n", answer);
 
   args_destroy(args);
 
