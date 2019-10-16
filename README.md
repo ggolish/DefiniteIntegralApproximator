@@ -25,7 +25,7 @@ A program for approximating definite integrals, written for MATH
 613 - Applied Linear Algebra course at Indiana State University. The
 program uses [Simpson's one-third](https://en.wikipedia.org/wiki/Simpson%27s_rule) rule for the approximation:
 
-![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%20%5Cint%20_%7Ba%7D%5E%7Bb%7Df%28x%29%5C%2Cdx%5Capprox%20%7B%5Ctfrac%20%7B%5CDelta%201%20x%7D%7B3%7D%7D%5Cleft%28f%28x_%7B0%7D%29&plus;4f%28x_%7B1%7D%29&plus;2f%28x_%7B2%7D%29&plus;4f%28x_%7B3%7D%29&plus;2f%28x_%7B4%7D%29&plus;%5Ccdots%202%20&plus;4f%28x_%7Bn-1%7D%29&plus;f%28x_%7Bn%7D%29%5Cright%29)
+![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%20%5Cint%20_%7Ba%7D%5E%7Bb%7Df%28x%29%5C%2Cdx%5Capprox%20%7B%5Ctfrac%20%7B%5CDelta%20x%7D%7B3%7D%7D%5Cleft%28f%28x_%7B0%7D%29&plus;4f%28x_%7B1%7D%29&plus;2f%28x_%7B2%7D%29&plus;4f%28x_%7B3%7D%29&plus;2f%28x_%7B4%7D%29&plus;%5Ccdots%20&plus;4f%28x_%7Bn-1%7D%29&plus;f%28x_%7Bn%7D%29%5Cright%29)
 
 This program uses the extended form of Simpson's rule for
 approximating n-dimensional integrals.
@@ -161,9 +161,9 @@ command line way would be:
 Run the interactive program `run_tests.sh` to perform some test
 examples using the program. The test examples are as follows:
 
--   \(\displaystyle{\int_0^{2\pi} \sin(x) dx}\)
--   \(\displaystyle{\int_0^{2\pi} \cos(x) dx}\)
--   \(\displaystyle{\int_0^{10} \sin(x^2 + 1) dx}\)
--   \(\displaystyle{\int_{10}^{20} \sin(x^2 + 1) dx}\)
--   \(\displaystyle{\int_{-1}^{1} \int_1^2 x^2y + xy^2 dx dy}\)
+-   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B2%5Cpi%7D%20%5Csin%28x%29%20dx%7D)
+-   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B2%5Cpi%7D%20%5Ccos%28x%29%20dx%7D)
+-   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B10%7D%20%5Csin%28x%5E2%20&plus;%201%29%20dx%7D)
+-   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_%7B10%7D%5E%7B20%7D%20%5Csin%28x%5E2%20&plus;%201%29%20dx%7D)
+-   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_%7B-1%7D%5E%7B1%7D%20%5Cint_1%5E2%20x%5E2y%20&plus;%20xy%5E2%20dx%20dy%7D)
 
