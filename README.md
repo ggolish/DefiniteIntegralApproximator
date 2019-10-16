@@ -161,9 +161,9 @@ command line way would be:
 Run the interactive program `run_tests.sh` to perform some test
 examples using the program. The test examples are as follows:
 
--   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B2%5Cpi%7D%20%5Csin%28x%29%20dx%7D)
--   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B2%5Cpi%7D%20%5Ccos%28x%29%20dx%7D)
--   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B10%7D%20%5Csin%28x%5E2%20&plus;%201%29%20dx%7D)
--   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_%7B10%7D%5E%7B20%7D%20%5Csin%28x%5E2%20&plus;%201%29%20dx%7D)
--   [!equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_%7B-1%7D%5E%7B1%7D%20%5Cint_1%5E2%20x%5E2y%20&plus;%20xy%5E2%20dx%20dy%7D)
+-   ![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B2%5Cpi%7D%20%5Csin%28x%29%20dx%7D)
+-   ![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B2%5Cpi%7D%20%5Ccos%28x%29%20dx%7D)
+-   ![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_0%5E%7B10%7D%20%5Csin%28x%5E2%20&plus;%201%29%20dx%7D)
+-   ![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_%7B10%7D%5E%7B20%7D%20%5Csin%28x%5E2%20&plus;%201%29%20dx%7D)
+-   ![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%7B%5Cint_%7B-1%7D%5E%7B1%7D%20%5Cint_1%5E2%20x%5E2y%20&plus;%20xy%5E2%20dx%20dy%7D)
 
