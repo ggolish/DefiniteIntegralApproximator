@@ -24,9 +24,7 @@
 A program for approximating definite integrals, written for MATH
 613 - Applied Linear Algebra course at Indiana State University. The
 program uses [Simpson's one-third](https://en.wikipedia.org/wiki/Simpson%27s_rule) rule for the approximation:
-\[\displaystyle \int _{a}^{b}f(x)\,dx\approx {\tfrac {\Delta
-  x}{3}}\left(f(x_{0})+4f(x_{1})+2f(x_{2})+4f(x_{3})+2f(x_{4})+\cdots
-  +4f(x_{n-1})+f(x_{n})\right).\]
+![equation](https://latex.codecogs.com/svg.latex?%5Cdisplaystyle%20%5Cint%20_%7Ba%7D%5E%7Bb%7Df%28x%29%5C%2Cdx%5Capprox%20%7B%5Ctfrac%20%7B%5CDelta%201%20x%7D%7B3%7D%7D%5Cleft%28f%28x_%7B0%7D%29&plus;4f%28x_%7B1%7D%29&plus;2f%28x_%7B2%7D%29&plus;4f%28x_%7B3%7D%29&plus;2f%28x_%7B4%7D%29&plus;%5Ccdots%202%20&plus;4f%28x_%7Bn-1%7D%29&plus;f%28x_%7Bn%7D%29%5Cright%29)
 This program uses the extended form of Simpson's rule for
 approximating n-dimensional integrals.
 
